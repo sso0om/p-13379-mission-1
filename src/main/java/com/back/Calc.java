@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 public class Calc {
     public static int run(String exp) {
-        Pattern pattern = Pattern.compile("\\d+|[+-]");
+        Pattern pattern = Pattern.compile("-?\\d+|[+\\-*]");
         Matcher matcher = pattern.matcher(exp);
 
         int result;
@@ -23,6 +23,7 @@ public class Calc {
             result = switch (operator) {
                 case "+" -> result + nextNumber;
                 case "-" -> result - nextNumber;
+                case "*" -> result * nextNumber;
                 default -> throw new IllegalStateException("유효하지 않은 연산자 : " + operator);
             };
         }
