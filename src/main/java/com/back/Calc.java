@@ -1,14 +1,31 @@
 package com.back;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class Calc {
     public static int run(String exp) {
-        String[] inputs = exp.split("\\s[+-]\\s");
-        int number1 = Integer.parseInt(inputs[0]);
-        int number2 = Integer.parseInt(inputs[1]);
+        Pattern pattern = Pattern.compile("\\d+|[+-]");
+        Matcher matcher = pattern.matcher(exp);
 
-        if (exp.contains("+")) return number1 + number2;
-        if (exp.contains("-")) return number1 - number2;
+        int result;
+        if (matcher.find()) {
+            result = Integer.parseInt(matcher.group());
+        } else {
+            throw new IllegalStateException("수식 미입력");
+        }
 
-        return -1;
+        while (matcher.find()) {
+            String operator = matcher.group();
+            matcher.find();
+            int nextNumber = Integer.parseInt(matcher.group());
+
+            result = switch (operator) {
+                case "+" -> result + nextNumber;
+                case "-" -> result - nextNumber;
+                default -> throw new IllegalStateException("유효하지 않은 연산자 : " + operator);
+            };
+        }
+        return result;
     }
 }
